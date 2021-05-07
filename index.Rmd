@@ -4,9 +4,10 @@ output:
   html_document:
     toc: true
     toc_float: true
+    code_folding: hide
 ---
 
-```{r set_up}
+```{r set_up, echo = FALSE, message = FALSE, warnings = FALSE}
 
 library(leaflet)
 library(readr)
@@ -46,16 +47,16 @@ factpal_2 = colorFactor(hcl.colors(3, palette = "Viridis", alpha = 1), facilitie
 
 You can hover over each of the maps below to view information about the population of each subcounty within each age group.
 
-```{r total}
-pal = colorQuantile("Blues", domain = shape$pop_total)
+### Total Population
 
-labels = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Total Population:</strong> {shape$total}") %>%
+```{r total_pop}
+pal = colorBin("Blues", domain = shape$pop_total, bins = 5)
+
+labels = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Total Population:</strong> {shape$pop_total}") %>%
             purrr::map(htmltools::HTML)
 
-##labels2 = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Proportion of Population: </strong>{shape$input_prop}%<br/><strong>Population (in selected age group):</strong> {shape$input_pop}<br/><strong>Total Population (All Ages):</strong> {shape$total}") %>%
-           ## purrr::map(htmltools::HTML)
-
-shape %>%
+total_map =
+  shape %>%
   leaflet() %>%
   addTiles() %>% 
   addPolygons(
@@ -79,6 +80,274 @@ shape %>%
      addLegend("topright", pal = pal, values = shape$pop_total,
                       title = "Population", opacity = 0.5) %>% 
      addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
+
+total_map
+```
+
+### Ages 0-5
+
+```{r pop0_5}
+
+pal2 = colorBin("Blues", domain = shape$pop0_5, bins = 5)
+
+labels2 = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Proportion of Population: </strong>{round(shape$pop0_5/shape$pop_total, 2)*100}%<br/><strong>Population (Ages 0-5):</strong> {shape$pop0_5}<br/><strong>Total Population (All Ages):</strong> {shape$pop_total}") %>%
+            purrr::map(htmltools::HTML)
+
+pop0_5_map =
+  shape %>%
+  leaflet() %>%
+  addTiles() %>% 
+  addPolygons(
+     fillColor = ~pal2(pop0_5),
+     weight = 2,
+     opacity = 1,
+     color = "black",
+     dashArray = "1",
+     fillOpacity = 0.5,
+     highlightOptions = highlightOptions(
+     weight = 5,
+     color = "#666",
+     dashArray = "",
+     fillOpacity = 0.7,
+      bringToFront = TRUE),
+     label = labels2,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>% 
+     addLegend("topright", pal = pal2, values = shape$pop0_5,
+                      title = "Population, Ages 0-5", opacity = 0.5) %>% 
+     addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
+
+pop0_5_map
+```
+
+### Ages 6-14
+
+```{r pop6_14}
+
+pal3 = colorBin("Blues", domain = shape$pop6_14, bins = 5)
+
+labels3 = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Proportion of Population: </strong>{round(shape$pop6_14/shape$pop_total, 2)*100}%<br/><strong>Population (Ages 6-14):</strong> {shape$pop6_14}<br/><strong>Total Population (All Ages):</strong> {shape$pop_total}") %>%
+            purrr::map(htmltools::HTML)
+
+pop6_14_map =
+  shape %>%
+  leaflet() %>%
+  addTiles() %>% 
+  addPolygons(
+     fillColor = ~pal3(pop6_14),
+     weight = 2,
+     opacity = 1,
+     color = "black",
+     dashArray = "1",
+     fillOpacity = 0.5,
+     highlightOptions = highlightOptions(
+     weight = 5,
+     color = "#666",
+     dashArray = "",
+     fillOpacity = 0.7,
+      bringToFront = TRUE),
+     label = labels3,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>% 
+     addLegend("topright", pal = pal3, values = shape$pop6_14,
+                      title = "Population, Ages 6-14", opacity = 0.5) %>% 
+     addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
+
+pop6_14_map
+```
+
+### Ages 15-18
+
+```{r pop15_18}
+
+pal4 = colorBin("Blues", domain = shape$pop15_18, bins = 5)
+
+labels4 = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Proportion of Population: </strong>{round(shape$pop15_18/shape$pop_total, 2)*100}%<br/><strong>Population (Ages 15-18):</strong> {shape$pop15_18}<br/><strong>Total Population (All Ages):</strong> {shape$pop_total}") %>%
+            purrr::map(htmltools::HTML)
+
+pop15_18_map =
+  shape %>%
+  leaflet() %>%
+  addTiles() %>% 
+  addPolygons(
+     fillColor = ~pal4(pop15_18),
+     weight = 2,
+     opacity = 1,
+     color = "black",
+     dashArray = "1",
+     fillOpacity = 0.5,
+     highlightOptions = highlightOptions(
+     weight = 5,
+     color = "#666",
+     dashArray = "",
+     fillOpacity = 0.7,
+      bringToFront = TRUE),
+     label = labels4,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>% 
+     addLegend("topright", pal = pal4, values = shape$pop15_18,
+                      title = "Population, Ages 15-18", opacity = 0.5) %>% 
+     addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
+
+pop15_18_map
+```
+
+### Ages 19-24
+
+```{r pop19_24}
+
+pal5 = colorBin("Blues", domain = shape$pop19_24, bins = 5)
+
+labels5 = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Proportion of Population: </strong>{round(shape$pop19_24/shape$pop_total, 2)*100}%<br/><strong>Population (Ages 19-24):</strong> {shape$pop19_24}<br/><strong>Total Population (All Ages):</strong> {shape$pop_total}") %>%
+            purrr::map(htmltools::HTML)
+
+pop19_24_map =
+  shape %>%
+  leaflet() %>%
+  addTiles() %>% 
+  addPolygons(
+     fillColor = ~pal5(pop19_24),
+     weight = 2,
+     opacity = 1,
+     color = "black",
+     dashArray = "1",
+     fillOpacity = 0.5,
+     highlightOptions = highlightOptions(
+     weight = 5,
+     color = "#666",
+     dashArray = "",
+     fillOpacity = 0.7,
+      bringToFront = TRUE),
+     label = labels5,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>% 
+     addLegend("topright", pal = pal5, values = shape$pop19_24,
+                      title = "Population, Ages 19-24", opacity = 0.5) %>% 
+     addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
+
+pop19_24_map
+```
+
+### Ages 25-45
+
+```{r pop25_45}
+
+pal6 = colorBin("Blues", domain = shape$pop25_45, bins = 5)
+
+labels6 = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Proportion of Population: </strong>{round(shape$pop25_45/shape$pop_total, 2)*100}%<br/><strong>Population (Ages 25-45):</strong> {shape$pop25_45}<br/><strong>Total Population (All Ages):</strong> {shape$pop_total}") %>%
+            purrr::map(htmltools::HTML)
+
+pop25_45_map =
+  shape %>%
+  leaflet() %>%
+  addTiles() %>% 
+  addPolygons(
+     fillColor = ~pal6(pop25_45),
+     weight = 2,
+     opacity = 1,
+     color = "black",
+     dashArray = "1",
+     fillOpacity = 0.5,
+     highlightOptions = highlightOptions(
+     weight = 5,
+     color = "#666",
+     dashArray = "",
+     fillOpacity = 0.7,
+      bringToFront = TRUE),
+     label = labels6,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>% 
+     addLegend("topright", pal = pal6, values = shape$pop25_45,
+                      title = "Population, Ages 25-45", opacity = 0.5) %>% 
+     addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
+
+pop25_45_map
+```
+
+### Ages 46-60
+
+```{r pop46_60}
+
+pal7 = colorBin("Blues", domain = shape$pop46_60, bins = 5)
+
+labels7 = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Proportion of Population: </strong>{round(shape$pop46_60/shape$pop_total, 2)*100}%<br/><strong>Population (Ages 46-60):</strong> {shape$pop46_60}<br/><strong>Total Population (All Ages):</strong> {shape$pop_total}") %>%
+            purrr::map(htmltools::HTML)
+
+pop46_60_map =
+  shape %>%
+  leaflet() %>%
+  addTiles() %>% 
+  addPolygons(
+     fillColor = ~pal7(pop46_60),
+     weight = 2,
+     opacity = 1,
+     color = "black",
+     dashArray = "1",
+     fillOpacity = 0.5,
+     highlightOptions = highlightOptions(
+     weight = 5,
+     color = "#666",
+     dashArray = "",
+     fillOpacity = 0.7,
+      bringToFront = TRUE),
+     label = labels7,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>% 
+     addLegend("topright", pal = pal7, values = shape$pop46_60,
+                      title = "Population, Ages 46-60", opacity = 0.5) %>% 
+     addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
+
+pop46_60_map
+```
+
+### Ages 61+
+
+```{r pop61}
+
+pal8 = colorBin("Blues", domain = shape$pop61_, bins = 5)
+
+labels8 = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Proportion of Population: </strong>{round(shape$pop61_/shape$pop_total, 2)*100}%<br/><strong>Population (Ages 61+):</strong> {shape$pop61_}<br/><strong>Total Population (All Ages):</strong> {shape$pop_total}") %>%
+            purrr::map(htmltools::HTML)
+
+pop61_map =
+  shape %>%
+  leaflet() %>%
+  addTiles() %>% 
+  addPolygons(
+     fillColor = ~pal8(pop61_),
+     weight = 2,
+     opacity = 1,
+     color = "black",
+     dashArray = "1",
+     fillOpacity = 0.5,
+     highlightOptions = highlightOptions(
+     weight = 5,
+     color = "#666",
+     dashArray = "",
+     fillOpacity = 0.7,
+      bringToFront = TRUE),
+     label = labels8,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>% 
+     addLegend("topright", pal = pal8, values = shape$pop61_,
+                      title = "Population, Ages 61+", opacity = 0.5) %>% 
+     addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
+
+pop61_map
 ```
 
 # Health Facilities by Level
