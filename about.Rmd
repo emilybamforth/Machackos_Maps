@@ -1,0 +1,15 @@
+---
+title: "Case Study"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+## Assignment Instructions
+
+Could place any instructions here. Or could include on a different page!
+
+## Case Study Description
+
+Could provide the case study description here.

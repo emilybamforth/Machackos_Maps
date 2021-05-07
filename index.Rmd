@@ -1,0 +1,21 @@
+---
+title: "Machakos Case Study"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# Population by Age
+
+```{r}
+
+```
+
+# Health Facilities by Level
+
+```{r}
+
+```
+
+# Health Facilities by Ownership
