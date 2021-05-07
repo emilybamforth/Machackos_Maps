@@ -6,16 +6,137 @@ output:
     toc_float: true
 ---
 
+```{r set_up}
+
+library(leaflet)
+library(readr)
+library(sf)
+library(tidyverse)
+
+shape = read_sf(dsn = "shape/", layer = "subcounties_age")
+shape =
+  shape %>% 
+  rename(pop0_5 = joined0.5,
+         pop6_14 = joined6.14,
+         pop15_18 = joined15.1,
+         pop19_24 = joined19.2,
+         pop25_45 = joined25.4,
+         pop46_60 = joined46.6,
+         pop61_ = joined61.,
+         pop_total = joinedTota)
+
+shape$pop0_5 = as.numeric(shape$pop0_5)
+shape$pop6_14 = as.numeric(shape$pop6_14)
+shape$pop15_18 = as.numeric(shape$pop15_18)
+shape$pop19_24 = as.numeric(shape$pop19_24)
+shape$pop25_45 = as.numeric(shape$pop25_45)
+shape$pop46_60 = as.numeric(shape$pop46_60)
+shape$pop61_ = as.numeric(shape$pop61_)
+shape$pop_total = as.numeric(shape$pop_total)
+
+facilities_df = read_csv("final_facilities_tidy_3.12.21.csv")
+
+factpal = colorFactor(hcl.colors(4, palette = "Blue-Red 3", alpha = 1), facilities_df$level)
+factpal_2 = colorFactor(hcl.colors(3, palette = "Viridis", alpha = 1), facilities_df$ownership)
+
+```
+
+
 # Population by Age
 
-```{r}
+You can hover over each of the maps below to view information about the population of each subcounty within each age group.
 
+```{r total}
+pal = colorQuantile("Blues", domain = shape$pop_total)
+
+labels = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Total Population:</strong> {shape$total}") %>%
+            purrr::map(htmltools::HTML)
+
+##labels2 = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Proportion of Population: </strong>{shape$input_prop}%<br/><strong>Population (in selected age group):</strong> {shape$input_pop}<br/><strong>Total Population (All Ages):</strong> {shape$total}") %>%
+           ## purrr::map(htmltools::HTML)
+
+shape %>%
+  leaflet() %>%
+  addTiles() %>% 
+  addPolygons(
+     fillColor = ~pal(pop_total),
+     weight = 2,
+     opacity = 1,
+     color = "black",
+     dashArray = "1",
+     fillOpacity = 0.5,
+     highlightOptions = highlightOptions(
+     weight = 5,
+     color = "#666",
+     dashArray = "",
+     fillOpacity = 0.7,
+      bringToFront = TRUE),
+     label = labels,
+    labelOptions = labelOptions(
+      style = list("font-weight" = "normal", padding = "3px 8px"),
+      textsize = "15px",
+      direction = "auto")) %>% 
+     addLegend("topright", pal = pal, values = shape$pop_total,
+                      title = "Population", opacity = 0.5) %>% 
+     addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
 ```
 
 # Health Facilities by Level
 
-```{r}
+This map presents the distribution of healthcare facilities by level. Click on the circle markers to see details about healthcare facilities in Machakos County.
+```{r facilities}
+
+leaflet() %>% 
+            addProviderTiles(providers$Esri.WorldTopoMap) %>%
+            addPolygons(data = shape,
+                        weight = 1,
+                        opacity = 1,
+                        color = "black",
+                        dashArray = "1",
+                        fillOpacity = 0) %>% 
+            addCircleMarkers(data = facilities_df,
+                       lat = ~lat,
+                       lng = ~lng,
+                       radius = ~dplyr::case_when(
+                                    facilities_df$level == "Level 5" ~ 15,
+                                    facilities_df$level == "Level 4" ~ 10,
+                                    TRUE ~ 5),
+                       popup = paste(
+                           "<strong>", "Facility Name:", "</strong>", facilities_df$facility_name, "<br>", "<strong>", "Ownership:", "</strong>", facilities_df$ownership, "<br>", "<strong>", "Level:", "</strong>", facilities_df$level),
+                       color = ~factpal(level), fillOpacity = 0.8, weight = 0.8) %>% 
+            addLegend("topright", pal = factpal, values = facilities_df$level,
+                      title = "Facility Level", opacity = 0.8) %>% 
+            addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
 
 ```
 
+
+
 # Health Facilities by Ownership
+
+This map presents the distribution of healthcare facilities by ownership. Click on the circle markers to see details about healthcare facilities in Machakos County.
+
+```{r ownership}
+leaflet() %>% 
+            addProviderTiles(providers$Esri.WorldTopoMap) %>%
+            addPolygons(data = shape,
+                        weight = 1,
+                        opacity = 1,
+                        color = "black",
+                        dashArray = "1",
+                        fillOpacity = 0) %>% 
+            addCircleMarkers(data = facilities_df,
+                       lat = ~lat,
+                       lng = ~lng,
+                       radius = ~dplyr::case_when(
+                                    facilities_df$level == "Level 5" ~ 15,
+                                    facilities_df$level == "Level 4" ~ 10,
+                                    TRUE ~ 5),
+                       popup = paste(
+                           "<strong>", "Facility Name:", "</strong>", facilities_df$facility_name, "<br>", "<strong>", "Ownership:", "</strong>", facilities_df$ownership, "<br>", "<strong>", "Level:", "</strong>", facilities_df$level),
+                       color = ~factpal_2(ownership), fillOpacity = 0.8, weight = 0.8) %>% 
+            addLegend("topright", pal = factpal_2, values = facilities_df$ownership,
+                      title = "Facility Ownership", opacity = 0.8) %>% 
+            addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE))
+```
+
