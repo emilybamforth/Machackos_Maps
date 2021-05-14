@@ -4,7 +4,6 @@ output:
   html_document:
     toc: true
     toc_float: true
-    code_folding: hide
 ---
 
 ```{r set_up, echo = FALSE, message = FALSE, warnings = FALSE}
@@ -85,7 +84,7 @@ labels8 = glue::glue("<strong>{shape$subcounty}</strong><br/><strong>Proportion 
 ```
 
 Population by Age {.tabset .tabset-fade}
------------------------------------------------------------------------
+-----------------------------------------------------------------
 
 The following maps show the distribution of the population by age group. Click on the tab for the age group you are interested in viewing. For each map, you can hover over the the map with your mouse to see more details by subcounty.
 

@@ -8,8 +8,8 @@ output:
 
 ## Assignment Instructions
 
-Could place any instructions here. Or could include on a different page!
+If you would like, we could place any instructions on an About page like this.
 
 ## Case Study Description
 
-Could provide the case study description here.
+We could also provide the case study description. Or we could include this on a different page.

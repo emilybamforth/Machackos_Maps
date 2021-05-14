@@ -1,7 +1,7 @@
-name: "Yay internet!"
+name: "Case Study Website"
 output_dir: "."
 navbar:
-  title: "Home"
+  title: "Oral Health Program Planning and Evaluation"
   right:
     - text: "About"
       href: about.html
