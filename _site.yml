@@ -3,10 +3,8 @@ output_dir: "."
 navbar:
   title: "Oral Health Program Planning and Evaluation"
   right:
-    - text: "About"
+    - text: "Instructions"
       href: about.html
-    - icon: fa-envelope fa-lg
-      href: mailto:<you@youremail.com>
 output:
   html_document:
     theme: cerulean
